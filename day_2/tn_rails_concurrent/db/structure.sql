@@ -10,6 +10,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: order_status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -79,7 +86,8 @@ CREATE TABLE public.products (
     stock integer,
     price numeric,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    orders_count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -158,12 +166,29 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: index_orders_on_created_at_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_orders_on_created_at_date ON public.orders USING btree (date(created_at));
+
+
+--
+-- Name: index_orders_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_orders_on_product_id ON public.orders USING btree (product_id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20241227012439'),
+('20241226024546'),
+('20241226023934'),
 ('20241216120643'),
 ('20241216120641');
 
